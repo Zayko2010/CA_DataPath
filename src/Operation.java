@@ -2,8 +2,8 @@ import java.util.Hashtable;
 
 
 public class Operation {
-	
-	int PC = 0;
+
+	static int PC = 0;
 	InstructionMemory im = new InstructionMemory();
 	ControlUnit cu = new ControlUnit();
 	DataMemory dm = new DataMemory();
@@ -13,46 +13,106 @@ public class Operation {
 	boolean mux2 = false;
 	boolean mux3 = false;
 	String[] curIns;
-	
+
 	Hashtable<String, Object> FchDcd = new Hashtable<String, Object>();
 	Hashtable<String, Object> DcdExe = new Hashtable<String, Object>();
 	Hashtable<String, Object> ExeMem = new Hashtable<String, Object>();
 	Hashtable<String, Object> MemWB = new Hashtable<String, Object>();
-	
-	public Operation(int currentPC) {
+
+	public static void incrementPC()
+	{
+		PC++;
+	}
+
+	public Operation(int currentPC)
+	{
 		PC = currentPC;
 	}
-	
+
 	public void fetch()
 	{
 		String[] curIns = im.getInstruction(PC);
 		PC++;
-		
+
 		FchDcd.put("Instruction", curIns);
 		FchDcd.put("PC", PC);
 	}
-	
+
 	public void decode()
 	{
 		String[] ins = (String[]) FchDcd.get("Instruction");
 		Hashtable<String, Integer> ctrlSignals = ControlUnit.decode(ins);
-		
-		
-		
+
+		if(ctrlSignals.get("Type") == 'r')
+		{
+			DcdExe.put("data1", rg.getValueOf(ins[2]));
+			DcdExe.put("data2", rg.getValueOf(ins[3]));
+			DcdExe.put("do", "r");
+		}
+		else if(ctrlSignals.get("Type") == 'i')
+		{
+			if(ins[0].equals("addi"))
+			{
+				DcdExe.put("data1", rg.getValueOf(ins[2]));
+				DcdExe.put("data2", Integer.parseInt(ins[3]));
+				DcdExe.put("do", "a");
+			}
+			else if(ins[0].startsWith("l") && !ins[0].equals("lui"))
+			{
+				DcdExe.put("offset", ins[2].charAt(0));
+				DcdExe.put("SrcReg", ins[2].substring(2, 5));
+				DcdExe.put("DestReg", ins[1]);
+				DcdExe.put("do", "l");
+			}
+			else if(ins[0].equals("lui"))
+			{
+				DcdExe.put("DestReg", ins[1]);
+				DcdExe.put("data", Integer.parseInt(ins[2]));
+				DcdExe.put("do", "u");
+			}
+			else if(ins[0].startsWith("s"))
+			{
+				DcdExe.put("offset", ins[2].charAt(0));
+				DcdExe.put("DestReg", ins[2].substring(2, 5));
+				DcdExe.put("SrcReg", ins[1]);
+				DcdExe.put("do", "s");
+			}
+		}
+		else if(ctrlSignals.get("Type") == 'j')
+		{
+			//TODO Handle the jump conditions, in text reading and passing prams
+			if(ins[0].equals("j"))
+			{
+				DcdExe.put("Jaddress", im.jumpAddress(ins[1]));
+				DcdExe.put("do", "j");
+			}
+			else if(ins[0].equals("jal"))
+			{
+				DcdExe.put("Jaddress", im.jumpAddress(ins[1]));
+				DcdExe.put("do", "jal");
+			}
+			else if(ins[0].equals("jr"))
+			{
+				DcdExe.put("Jaddress", rg.getValueOf(ins[1]));
+				DcdExe.put("do", "jr");
+			}
+		}
+
 		DcdExe.put("ctrlSignals", ctrlSignals);
 		DcdExe.put("PC", FchDcd.get("PC"));
 	}
-	
-	public void execute(String [] ins) {
-		
+
+	public void execute(String [] ins)
+	{
+
 	}
-	
+
 	public void memory() {
-		
+
 	}
-	
+
 	public void writeBack() {
-		
+
 	}
 
 }
