@@ -118,7 +118,7 @@ public class Operation {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void execute(String [] ins)
+	public void execute()
 	{
 		Hashtable ctrlSignals = (Hashtable) DcdExe.get("ctrlSignals");
 		if(DcdExe.get("do").equals("r"))

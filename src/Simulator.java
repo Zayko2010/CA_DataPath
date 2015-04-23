@@ -1,34 +1,65 @@
+/*
+ * AUTHOR: Tarek
+ */
 
-public class Simulator
-{
-	public void init()
-	{
-	
+public class Simulator {
+	int noOfIns = 0;
+	int initialPC = 0;
+	String[][] cycles;
+	Operation opr;
+	boolean initiated = false;
+
+	public void init() {
+		opr = new Operation(initialPC);
+		noOfIns = opr.im.count - opr.PC;
+		cycles = generateCycles(noOfIns);
+		initiated = true;
 	}
-	
-	public static void main(String[] args)
-	{
-		String x = "next: ";
-		
-		String[] tmp = x.split(",");
-		String[] tmp2 = tmp[0].split(" ");
-		
-		String[] instructArguments = new String[tmp.length + tmp2.length];
-		
-		instructArguments[0] = tmp2[0].trim();
-		instructArguments[1] = tmp2[1].trim();
-		
-		for (int i = 1; i < tmp.length; i++)
-		{
-			instructArguments[i + 1] = tmp[i].trim();
+
+	public void run() {
+		if (initiated)
+			runCycles(cycles);
+	}
+
+	public String[][] generateCycles(int ins) {
+
+		String[][] c = new String[ins][ins + 4];
+		for (int i = 0; i < ins; i++) {
+			c[i][i] = "IF";
+			c[i][i + 1] = "ID";
+			c[i][i + 2] = "EXE";
+			c[i][i + 3] = "MEM";
+			c[i][i + 4] = "WB";
 		}
-		
-		for (int i = 0; i < instructArguments.length; i++)
-		{
-			System.out.println(instructArguments[i]);
+		return c;
+
+	}
+
+	public void runCycles(String[][] cycles) {
+
+		for (int j = 0; j < cycles.length + 4; j++) {
+			for (int i = 0; i < cycles.length; i++) {
+				if (cycles[i][j].equals("IF")) opr.fetch();
+				if (cycles[i][j].equals("ID")) opr.decode();
+				if (cycles[i][j].equals("EXE")) opr.execute();
+				if (cycles[i][j].equals("MEM")) opr.memory();
+				if (cycles[i][j].equals("WB")) opr.writeBack();
+				if (cycles[i][j] == null) break;
+			}
 		}
+
+	}
+
+	public static void main(String[] args) {
 		
-		System.out.println(instructArguments[2].charAt(0));
-		System.out.println(instructArguments[2].substring(2, 5));
+		// Simulator s = new Simulator();
+		// String[][] test = s.generateCycles(3);
+		// for (int i = 0; i < test.length; i++) {
+		// for (int j=0; j < test[i].length; j++) {
+		// System.out.print(test[i][j] + " ");
+		// }
+		// System.out.println();
+		// }
+		
 	}
 }
