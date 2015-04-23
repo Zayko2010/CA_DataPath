@@ -72,6 +72,7 @@ public class InstructionMemory
 		{
 			if(instructions[i].startsWith(name))
 			{
+//				Might need to increment i before returning
 				return i;
 			}
 		}

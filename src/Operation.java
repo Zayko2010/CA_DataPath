@@ -45,13 +45,28 @@ public class Operation {
 
 		if(ctrlSignals.get("Type") == 'r')
 		{
-			DcdExe.put("data1", rg.getValueOf(ins[2]));
-			DcdExe.put("data2", rg.getValueOf(ins[3]));
+			if(ins[0].equals("sll") || ins[0].equals("srl"))
+			{
+				DcdExe.put("data1", rg.getValueOf(ins[2]));
+				DcdExe.put("data2", Integer.parseInt(ins[3]));
+			}
+			else
+			{
+				DcdExe.put("data1", rg.getValueOf(ins[2]));
+				DcdExe.put("data2", rg.getValueOf(ins[3]));
+			}
 			DcdExe.put("do", "r");
 		}
 		else if(ctrlSignals.get("Type") == 'i')
 		{
-			if(ins[0].equals("addi"))
+			if(ins[0].startsWith("b"))
+			{
+				DcdExe.put("data1", rg.getValueOf(ins[1]));
+				DcdExe.put("data2", Integer.parseInt(ins[2]));
+				DcdExe.put("bAddress", im.jumpAddress(ins[3]));
+				DcdExe.put("do", "b");
+			}
+			else if(ins[0].equals("addi"))
 			{
 				DcdExe.put("data1", rg.getValueOf(ins[2]));
 				DcdExe.put("data2", Integer.parseInt(ins[3]));
@@ -102,9 +117,36 @@ public class Operation {
 		DcdExe.put("PC", FchDcd.get("PC"));
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void execute(String [] ins)
 	{
+		Hashtable ctrlSignals = (Hashtable) DcdExe.get("ctrlSignals");
+		if(DcdExe.get("do").equals("r"))
+		{
+			int ALUOp = (int)(ctrlSignals.get("ALUOp"));
+			int data1 = (int) DcdExe.get("data1");
+			int data2 = (int) DcdExe.get("data2");
+			int AluRslt = ALU.call(ALUOp, data1, data2);
 
+			ExeMem.put("AluRslt", AluRslt);
+			ExeMem.put("do", "r");
+		}
+		else if(DcdExe.get("do").equals("b"))
+		{
+			int ALUOp = (int)(ctrlSignals.get("ALUOp"));
+			int data1 = (int) DcdExe.get("data1");
+			int data2 = (int) DcdExe.get("data2");
+			int AluRslt = ALU.call(ALUOp, data1, data2);
+
+			ExeMem.put("BrnachRslt", AluRslt);
+		}
+		else if(DcdExe.get("do").equals("b"))
+		{
+			
+		}
+
+		ExeMem.put("ctrlSignals", ctrlSignals);
+		ExeMem.put("PC", DcdExe.get("PC"));
 	}
 
 	public void memory() {
