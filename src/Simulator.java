@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Hashtable;
-
 
 public class Simulator
 {
@@ -11,11 +8,27 @@ public class Simulator
 	
 	public static void main(String[] args)
 	{
-		Hashtable<Integer, Object> test = new Hashtable<Integer, Object>();
+		String x = "next: ";
 		
-		test.put(1, 5);
+		String[] tmp = x.split(",");
+		String[] tmp2 = tmp[0].split(" ");
 		
-		int y = (int) test.get(1);
-		System.out.println(y);
+		String[] instructArguments = new String[tmp.length + tmp2.length];
+		
+		instructArguments[0] = tmp2[0].trim();
+		instructArguments[1] = tmp2[1].trim();
+		
+		for (int i = 1; i < tmp.length; i++)
+		{
+			instructArguments[i + 1] = tmp[i].trim();
+		}
+		
+		for (int i = 0; i < instructArguments.length; i++)
+		{
+			System.out.println(instructArguments[i]);
+		}
+		
+		System.out.println(instructArguments[2].charAt(0));
+		System.out.println(instructArguments[2].substring(2, 5));
 	}
 }

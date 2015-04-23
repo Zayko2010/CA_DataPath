@@ -263,7 +263,7 @@ public class ControlUnit
 		ctrlSignals.put("ALUOp", 0);
 
 		ctrlSignals.put("MemWrite", 0);
-		ctrlSignals.put("MemRead", 0);
+		ctrlSignals.put("MemRead", 1);
 		ctrlSignals.put("Branch", 0);
 
 		ctrlSignals.put("RegWrite", 0);
@@ -273,7 +273,48 @@ public class ControlUnit
 
 		return ctrlSignals;
 	}
+	
+//	private static Hashtable<String, Integer> jal()
+//	{
+//		Hashtable<String, Integer> ctrlSignals = new Hashtable<String, Integer>();
+//
+//		ctrlSignals.put("RegDst", 0);
+//		ctrlSignals.put("ALUSrc", 0);
+//		ctrlSignals.put("ALUOp", 0);
+//
+//		ctrlSignals.put("MemWrite", 0);
+//		ctrlSignals.put("MemRead", 1);
+//		ctrlSignals.put("Branch", 0);
+//
+//		ctrlSignals.put("RegWrite", 1);
+//		ctrlSignals.put("MemToReg", 0);
+//
+//		ctrlSignals.put("Type", (int) 'j');
+//
+//		return ctrlSignals;
+//	}
 
+// TODO erga3 hena tany ba3den	
+//	private static Hashtable<String, Integer> jr()
+//	{
+//		Hashtable<String, Integer> ctrlSignals = new Hashtable<String, Integer>();
+//
+//		ctrlSignals.put("RegDst", 0);
+//		ctrlSignals.put("ALUSrc", 0);
+//		ctrlSignals.put("ALUOp", 0);
+//
+//		ctrlSignals.put("MemWrite", 0);
+//		ctrlSignals.put("MemRead", 0);
+//		ctrlSignals.put("Branch", 0);
+//
+//		ctrlSignals.put("RegWrite", 0);
+//		ctrlSignals.put("MemToReg", 0);
+//
+//		ctrlSignals.put("Type", (int) 'j');
+//
+//		return ctrlSignals;
+//	}
+	
 	private static Hashtable<String, Integer> set()
 	{
 		Hashtable<String, Integer> ctrlSignals = new Hashtable<String, Integer>();

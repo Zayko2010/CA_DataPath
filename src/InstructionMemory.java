@@ -44,6 +44,13 @@ public class InstructionMemory
 	{
 		String instruction = instructions[address]; 
 		String[] tmp = instruction.split(",");
+		
+		if(tmp.length <= 1)
+		{
+			Operation.incrementPC();
+			return getInstruction(++address);
+		}
+		
 		String[] tmp2 = tmp[0].split(" ");
 		
 		String[] instructArguments = new String[tmp.length + tmp2.length];
@@ -58,5 +65,18 @@ public class InstructionMemory
 		
 		return instructArguments;
 	}
+	
+	public int jumpAddress(String name)
+	{
+		for (int i = 0; i < instructions.length; i++)
+		{
+			if(instructions[i].startsWith(name))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	//The Key End
 }
