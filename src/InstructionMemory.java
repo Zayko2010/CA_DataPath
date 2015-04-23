@@ -8,6 +8,7 @@ public class InstructionMemory
 {
 	private static String [] instructions = new String [100];
 	private static int address = 0;
+	int count = 0;
 
 	public InstructionMemory ()
 	{
@@ -23,6 +24,7 @@ public class InstructionMemory
 			{
 				instructions[address] = line;
 				address++;
+				count++;
 			}
 			br.close();
 		} 
