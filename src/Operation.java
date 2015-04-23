@@ -2,8 +2,8 @@ import java.util.Hashtable;
 
 public class Operation
 {
-	private static int PC = 0;
-	private InstructionMemory im = new InstructionMemory();
+	static int PC = 0;
+	InstructionMemory im = new InstructionMemory();
 	private DataMemory dm = new DataMemory();
 	private Registers rg = new Registers();
 
