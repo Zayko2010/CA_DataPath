@@ -4,18 +4,18 @@ public class ALU
 {	
 	Hashtable <String, Integer> regList;
 	
-	public static int call(int ctrl, String in1, String in2)
+	public static int call(int ctrl, int in1, int in2)
 	{
 		switch(ctrl)
 		{
-			case 0: return add(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 1: return sub(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 2: return sll(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 3: return slr(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 4: return and(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 5: return nor(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 6: return eql(Integer.parseInt(in1), Integer.parseInt(in2));
-			case 7: return nql(Integer.parseInt(in1), Integer.parseInt(in2));
+			case 0: return add(in1, in2);
+			case 1: return sub(in1, in2);
+			case 2: return sll(in1, in2);
+			case 3: return slr(in1, in2);
+			case 4: return and(in1, in2);
+			case 5: return nor(in1, in2);
+			case 6: return eql(in1, in2);
+			case 7: return nql(in1, in2);
 			default: System.out.println("Control Signal Error !");return 404;
 		}
 	}

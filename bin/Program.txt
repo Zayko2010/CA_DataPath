@@ -2,9 +2,10 @@ add $t0, $t1, $t3
 addi $t0, $t1, 5
 lw $t0, 8($t7)
 sw $t0, 8($t7)
-beq $t4, $t0, $t1
+beq $t4, $t0, Loop
 lui $t0, 5
 next:
 j skip1
 jal next
 jr $t0
+sll $t0, $t1, 5
