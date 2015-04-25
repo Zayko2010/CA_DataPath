@@ -23,13 +23,19 @@ public class Simulator {
 
 	public String[][] generateCycles(int ins) {
 
-		String[][] c = new String[ins][ins + 4];
+		String[][] c = new String[ins][(ins+4)*2];
+		int j = 0;
 		for (int i = 0; i < ins; i++) {
-			c[i][i] = "IF";
-			c[i][i + 1] = "ID";
-			c[i][i + 2] = "EXE";
-			c[i][i + 3] = "MEM";
-			c[i][i + 4] = "WB";
+			// branch hazard
+//			if (im.branchIns().contains(j)) {
+//				j = j + 3;
+//			}
+			c[i][j] = "IF";
+			c[i][j + 1] = "ID";
+			c[i][j + 2] = "EXE";
+			c[i][j + 3] = "MEM";
+			c[i][j + 4] = "WB";
+			j++;
 		}
 		return c;
 
@@ -52,14 +58,14 @@ public class Simulator {
 
 	public static void main(String[] args) {
 		
-		// Simulator s = new Simulator();
-		// String[][] test = s.generateCycles(3);
-		// for (int i = 0; i < test.length; i++) {
-		// for (int j=0; j < test[i].length; j++) {
-		// System.out.print(test[i][j] + " ");
-		// }
-		// System.out.println();
-		// }
+		 Simulator s = new Simulator();
+		 String[][] test = s.generateCycles(3);
+		 for (int i = 0; i < test.length; i++) {
+		 for (int j=0; j < test[i].length; j++) {
+		 System.out.print(test[i][j] + " ");
+		 }
+		 System.out.println();
+		 }
 		
 	}
 }
