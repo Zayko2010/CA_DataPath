@@ -263,7 +263,7 @@ public class ControlUnit
 		ctrlSignals.put("ALUOp", 0);
 
 		ctrlSignals.put("MemWrite", 0);
-		ctrlSignals.put("MemRead", 1);
+		ctrlSignals.put("MemRead", 0);
 		ctrlSignals.put("Branch", 0);
 
 		ctrlSignals.put("RegWrite", 0);
