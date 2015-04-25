@@ -82,12 +82,14 @@ public class InstructionMemory
 		return -1;
 	}
 	
-	public ArrayList<Integer> getBranches()
+	public static ArrayList<Integer> getBranches()
 	{
 		ArrayList<Integer> branches = new ArrayList<Integer>();
 		for (int i = 0; i < instructions.length; i++)
 		{
-			if(instructions[i].startsWith("beq") || instructions[i].startsWith("bne"))
+			if(instructions[i].startsWith("beq") || instructions[i].startsWith("bne") 
+					|| instructions[i].startsWith("j") || instructions[i].startsWith("jr")
+					|| instructions[i].startsWith("jal"))
 			{
 				branches.add(i);
 			}
