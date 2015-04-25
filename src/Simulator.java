@@ -23,13 +23,20 @@ public class Simulator {
 
 	public String[][] generateCycles(int ins) {
 
-		String[][] c = new String[ins][ins + 4];
+		String[][] c = new String[ins][(ins+4)*2];
+		int j = 0;
 		for (int i = 0; i < ins; i++) {
-			c[i][i] = "IF";
-			c[i][i + 1] = "ID";
-			c[i][i + 2] = "EXE";
-			c[i][i + 3] = "MEM";
-			c[i][i + 4] = "WB";
+			// branch hazard
+//			if (im.branchIns().contains(j)) {
+//				j = j + 3;
+//			}
+
+			c[i][j] = "IF";
+			c[i][j + 1] = "ID";
+			c[i][j + 2] = "EXE";
+			c[i][j + 3] = "MEM";
+			c[i][j + 4] = "WB";
+			j++;
 		}
 		return c;
 
@@ -39,27 +46,33 @@ public class Simulator {
 
 		for (int j = 0; j < cycles.length + 4; j++) {
 			for (int i = 0; i < cycles.length; i++) {
-				if (cycles[i][j].equals("IF")) opr.fetch();
-				if (cycles[i][j].equals("ID")) opr.decode();
-				if (cycles[i][j].equals("EXE")) opr.execute();
-				if (cycles[i][j].equals("MEM")) opr.memory();
-				if (cycles[i][j].equals("WB")) opr.writeBack();
-				if (cycles[i][j] == null) break;
+				if (cycles[i][j].equals("IF"))
+					opr.fetch();
+				else if (cycles[i][j].equals("ID"))
+					opr.decode();
+				else if (cycles[i][j].equals("EXE"))
+					opr.execute();
+				else if (cycles[i][j].equals("MEM"))
+					opr.memory();
+				else if (cycles[i][j].equals("WB"))
+					opr.writeBack();
+				else if (cycles[i][j] == null)
+					break;
 			}
 		}
 
 	}
 
 	public static void main(String[] args) {
-		
-		// Simulator s = new Simulator();
-		// String[][] test = s.generateCycles(3);
-		// for (int i = 0; i < test.length; i++) {
-		// for (int j=0; j < test[i].length; j++) {
-		// System.out.print(test[i][j] + " ");
-		// }
-		// System.out.println();
-		// }
+
+		 Simulator s = new Simulator();
+		 String[][] test = s.generateCycles(3);
+		 for (int i = 0; i < test.length; i++) {
+		 for (int j=0; j < test[i].length; j++) {
+		 System.out.print(test[i][j] + " ");
+		 }
+		 System.out.println();
+		 }
 		
 	}
 }
