@@ -39,19 +39,25 @@ public class Simulator {
 
 		for (int j = 0; j < cycles.length + 4; j++) {
 			for (int i = 0; i < cycles.length; i++) {
-				if (cycles[i][j].equals("IF")) opr.fetch();
-				if (cycles[i][j].equals("ID")) opr.decode();
-				if (cycles[i][j].equals("EXE")) opr.execute();
-				if (cycles[i][j].equals("MEM")) opr.memory();
-				if (cycles[i][j].equals("WB")) opr.writeBack();
-				if (cycles[i][j] == null) break;
+				if (cycles[i][j].equals("IF"))
+					opr.fetch();
+				else if (cycles[i][j].equals("ID"))
+					opr.decode();
+				else if (cycles[i][j].equals("EXE"))
+					opr.execute();
+				else if (cycles[i][j].equals("MEM"))
+					opr.memory();
+				else if (cycles[i][j].equals("WB"))
+					opr.writeBack();
+				else if (cycles[i][j] == null)
+					break;
 			}
 		}
 
 	}
 
 	public static void main(String[] args) {
-		
+
 		// Simulator s = new Simulator();
 		// String[][] test = s.generateCycles(3);
 		// for (int i = 0; i < test.length; i++) {
@@ -60,6 +66,6 @@ public class Simulator {
 		// }
 		// System.out.println();
 		// }
-		
+
 	}
 }
