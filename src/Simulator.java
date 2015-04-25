@@ -11,7 +11,7 @@ public class Simulator {
 
 	public void init() {
 		opr = new Operation(initialPC);
-		noOfIns = opr.im.count - opr.PC;
+		noOfIns = opr.im.count - Operation.PC;
 		cycles = generateCycles(noOfIns);
 		initiated = true;
 	}
@@ -23,13 +23,14 @@ public class Simulator {
 
 	public String[][] generateCycles(int ins) {
 
-		String[][] c = new String[ins][(ins + 4)+2];
+		String[][] c = new String[ins][(ins+4)*2];
 		int j = 0;
 		for (int i = 0; i < ins; i++) {
+			// branch hazard
+//			if (im.branchIns().contains(j)) {
+//				j = j + 3;
+//			}
 
-			if(im.branchIns().contains(i)) {
-				j = j + 3;
-			}
 			c[i][j] = "IF";
 			c[i][j + 1] = "ID";
 			c[i][j + 2] = "EXE";
@@ -64,14 +65,14 @@ public class Simulator {
 
 	public static void main(String[] args) {
 
-		// Simulator s = new Simulator();
-		// String[][] test = s.generateCycles(3);
-		// for (int i = 0; i < test.length; i++) {
-		// for (int j=0; j < test[i].length; j++) {
-		// System.out.print(test[i][j] + " ");
-		// }
-		// System.out.println();
-		// }
-
+		 Simulator s = new Simulator();
+		 String[][] test = s.generateCycles(3);
+		 for (int i = 0; i < test.length; i++) {
+		 for (int j=0; j < test[i].length; j++) {
+		 System.out.print(test[i][j] + " ");
+		 }
+		 System.out.println();
+		 }
+		
 	}
 }
