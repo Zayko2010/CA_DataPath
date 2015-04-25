@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //Sabrout start
 public class InstructionMemory
@@ -20,7 +21,7 @@ public class InstructionMemory
 			{
 				address = Integer.parseInt(line);
 			}
-			while((line = br.readLine()) != null)
+			while((line = br.readLine().trim()) != null)
 			{
 				instructions[address] = line;
 				address++;
@@ -81,5 +82,17 @@ public class InstructionMemory
 		return -1;
 	}
 	
+	public ArrayList<Integer> getBranches()
+	{
+		ArrayList<Integer> branches = new ArrayList<Integer>();
+		for (int i = 0; i < instructions.length; i++)
+		{
+			if(instructions[i].startsWith("beq") || instructions[i].startsWith("bne"))
+			{
+				branches.add(i);
+			}
+		}
+		return branches;
+	}
 	//The Key End
 }

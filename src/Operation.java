@@ -152,7 +152,7 @@ public class Operation
 			int AluRslt = ALU.call(ALUOp, data1, data2);
 			
 			ExeMem.put("DestReg", DcdExe.get("DestReg"));
-			ExeMem.put("BrnachRslt", AluRslt);
+			ExeMem.put("AluRslt", AluRslt);
 			ExeMem.put("do", "a");
 		}
 		else if(DcdExe.get("do").equals("l"))
@@ -191,7 +191,9 @@ public class Operation
 		else if(DcdExe.get("do").equals("jal"))
 		{
 			ExeMem.put("PC", DcdExe.get("jAddress"));
-			ExeMem.put("rtrnAddress", PC + 1);
+			ExeMem.put("rtrnAddress", PC);
+			
+			PC = (int) DcdExe.get("jAddress");
 			
 			ExeMem.put("do", "jal");
 		}
@@ -212,9 +214,9 @@ public class Operation
 		
 		if(MemRead == 1)
 		{
-			rg.insertIntoRegister((String) ExeMem.get("lReg"), Integer.parseInt
-					(dm.call(MemRead, MemWrite, (int) ExeMem.get("lAddress"), 
-							(String)ExeMem.get("sData"))));
+			MemWB.put("lReg", ExeMem.get("lReg"));
+			MemWB.put("lData", dm.call(MemRead, MemWrite, (int) ExeMem.get("lAddress"), 
+							(String)ExeMem.get("sData")));
 		}
 		else if(MemWrite == 1)
 		{
@@ -236,8 +238,27 @@ public class Operation
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void writeBack()
 	{
-		
+		if((int)((Hashtable)MemWB.get("ctrlSignals")).get("RegWrite") == 1)
+		{
+			if(MemWB.get("do").equals("r") || MemWB.get("do").equals("a"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("DestReg"),(int) MemWB.get("AluRslt"));
+			}
+			else if(MemWB.get("do").equals("l"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("lReg"),(int) MemWB.get("lData"));
+			}
+			else if(MemWB.get("do").equals("u"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("DestReg"),(int) MemWB.get("data"));
+			}
+			else if(MemWB.get("do").equals("jal"))
+			{
+				rg.insertIntoRegister("$ra",(int) MemWB.get("rtrnAddress"));
+			}
+		}
 	}
 }
