@@ -3,10 +3,10 @@ import java.util.Hashtable;
 
 public class Operation
 {
-	static int PC = 0;
-	InstructionMemory im = new InstructionMemory();
-	private DataMemory dm = new DataMemory();
-	private Registers rg = new Registers();
+	InstructionMemory im;
+	static int PC;
+	private DataMemory dm;
+	private Registers rg;
 
 	Hashtable<String, Object> FchDcd = new Hashtable<String, Object>();
 	Hashtable<String, Object> DcdExe = new Hashtable<String, Object>();
@@ -22,9 +22,17 @@ public class Operation
 	{
 		PC = currentPC;
 	}
+	
+	public Operation() {
+		im = new InstructionMemory();
+		PC = InstructionMemory.address;
+		dm = new DataMemory();
+		rg = new Registers();
+	}
 
 	public boolean fetch()
 	{
+		System.out.println("PC = " + PC);
 		String[] curIns = im.getInstruction(PC);
 		PC++;
 		
@@ -78,7 +86,7 @@ public class Operation
 			}
 			else if(ins[0].startsWith("l") && !ins[0].equals("lui"))
 			{
-				DcdExe.put("offset", ins[2].charAt(0));
+				DcdExe.put("offset", Integer.parseInt(ins[2].charAt(0) + ""));
 				DcdExe.put("SrcReg", rg.getValueOf(ins[2].substring(2, 5)));
 				DcdExe.put("DestReg", ins[1]);
 				DcdExe.put("do", "l");
@@ -91,7 +99,7 @@ public class Operation
 			}
 			else if(ins[0].startsWith("s"))
 			{
-				DcdExe.put("offset", ins[2].charAt(0));
+				DcdExe.put("offset", Integer.parseInt(ins[2].charAt(0) + ""));
 				DcdExe.put("DestReg", rg.getValueOf(ins[2].substring(2, 5)));
 				DcdExe.put("SrcReg", rg.getValueOf(ins[1]));
 				DcdExe.put("do", "s");
@@ -152,7 +160,7 @@ public class Operation
 			int AluRslt = ALU.call(ALUOp, data1, data2);
 			
 			ExeMem.put("DestReg", DcdExe.get("DestReg"));
-			ExeMem.put("BrnachRslt", AluRslt);
+			ExeMem.put("AluRslt", AluRslt);
 			ExeMem.put("do", "a");
 		}
 		else if(DcdExe.get("do").equals("l"))
@@ -191,7 +199,9 @@ public class Operation
 		else if(DcdExe.get("do").equals("jal"))
 		{
 			ExeMem.put("PC", DcdExe.get("jAddress"));
-			ExeMem.put("rtrnAddress", PC + 1);
+			ExeMem.put("rtrnAddress", PC);
+			
+			PC = (int) DcdExe.get("jAddress");
 			
 			ExeMem.put("do", "jal");
 		}
@@ -212,15 +222,15 @@ public class Operation
 		
 		if(MemRead == 1)
 		{
-			rg.insertIntoRegister((String) ExeMem.get("lReg"), Integer.parseInt
-					(dm.call(MemRead, MemWrite, (int) ExeMem.get("lAddress"), 
-							(String)ExeMem.get("sData"))));
+			MemWB.put("lReg", ExeMem.get("lReg"));
+			System.out.println(ExeMem);
+			MemWB.put("lData", dm.call(MemRead, MemWrite, (int) ExeMem.get("lAddress"), ""));
 		}
 		else if(MemWrite == 1)
 		{
-			dm.call(MemRead, MemWrite, (int)ExeMem.get("sAddress"), (String)ExeMem.get("sData"));
+			dm.call(MemRead, MemWrite, (int)ExeMem.get("sAddress"), ExeMem.get("sData") + "");
 		}
-		else if((int)ExeMem.get("BranchRslt") == 1 && 
+		else if(ExeMem.get("BranchRslt") != null && (int)ExeMem.get("BranchRslt") == 1 && 
 				(int) ((Hashtable)ExeMem.get("ctrlSignals")).get("Branch") == 1)
 		{
 			PC = (int) ExeMem.get("bAddress");
@@ -232,12 +242,32 @@ public class Operation
 			{
 				String key = e.nextElement();
 				MemWB.put(key, ExeMem.get(key));
-			}
+			}+
+			
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void writeBack()
 	{
-		
+		if((int)((Hashtable)MemWB.get("ctrlSignals")).get("RegWrite") == 1)
+		{
+			if(MemWB.get("do").equals("r") || MemWB.get("do").equals("a"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("DestReg"),(int) MemWB.get("AluRslt"));
+			}
+			else if(MemWB.get("do").equals("l"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("lReg"),(int) MemWB.get("lData"));
+			}
+			else if(MemWB.get("do").equals("u"))
+			{
+				rg.insertIntoRegister((String)MemWB.get("DestReg"),(int) MemWB.get("data"));
+			}
+			else if(MemWB.get("do").equals("jal"))
+			{
+				rg.insertIntoRegister("$ra",(int) MemWB.get("rtrnAddress"));
+			}
+		}
 	}
 }

@@ -18,7 +18,7 @@ public class ControlUnit
 		case "lui":
 
 		case "sll": return sll();
-		case "slr": return slr();
+		case "srl": return srl();
 		case "and": return and();
 		case "nor": return nor();
 
@@ -154,7 +154,7 @@ public class ControlUnit
 		return ctrlSignals;
 	}
 
-	private static Hashtable<String, Integer> slr()
+	private static Hashtable<String, Integer> srl()
 	{
 		Hashtable<String, Integer> ctrlSignals = new Hashtable<String, Integer>();
 

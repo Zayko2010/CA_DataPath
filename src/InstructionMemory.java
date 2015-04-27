@@ -2,12 +2,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //Sabrout start
 public class InstructionMemory
 {
 	private static String [] instructions = new String [100];
-	private static int address = 0;
+	static int address = 0;
 	int count = 0;
 
 	public InstructionMemory ()
@@ -15,17 +16,21 @@ public class InstructionMemory
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader("src/Program.txt"));
-			String line;
-			if ((line = br.readLine()) != null)
+			String line = br.readLine();
+			if (line != null)
 			{
 				address = Integer.parseInt(line);
 			}
-			while((line = br.readLine()) != null)
+			int tmp = address;
+			line = br.readLine();
+			while(line != null)
 			{
-				instructions[address] = line;
-				address++;
+				instructions[tmp] = line.trim();
+				tmp++;
 				count++;
+				line = br.readLine();
 			}
+			System.out.println("IM address = " + address);
 			br.close();
 		} 
 		catch (FileNotFoundException e)
@@ -44,7 +49,13 @@ public class InstructionMemory
 	//The Key Start
 	public String[] getInstruction(int address)
 	{
-		String instruction = instructions[address]; 
+		String instruction = instructions[address];
+		
+		
+//		for (int z = 0; z < instructions.length; z++) 
+//		System.out.println(instructions[z]);
+		
+		
 		String[] tmp = instruction.split(",");
 		
 		if(tmp.length <= 1)
@@ -81,5 +92,17 @@ public class InstructionMemory
 		return -1;
 	}
 	
+	public static ArrayList<Integer> getBranches()
+	{
+		ArrayList<Integer> branches = new ArrayList<Integer>();
+		for (int i = 0; i < instructions.length && instructions[i] != null; i++)
+		{
+			if(instructions[i].startsWith("beq") || instructions[i].startsWith("bne"))
+			{
+				branches.add(i);
+			}
+		}
+		return branches;
+	}
 	//The Key End
 }
